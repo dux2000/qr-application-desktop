@@ -5,15 +5,29 @@ export interface CustomerDto {
     contacts: ContactDto[];
 }
 
+export interface CustomerReferenceDto {
+    id: number,
+    fullName: string
+}
+export interface ProductCommand {
+    name: string,
+    description: string,
+    status?: string,
+    currentUserId?: number,
+    customerId: number,
+    characteristics: CharacteristicDto[]
+}
 export interface ProductDto {
     id: string,
     name: string,
     description: string,
     status: StatusDto,
     created: string,
+    createdBy: UserReferenceDto,
     updated: string,
+    updatedBy: UserReferenceDto,
     currentUser: UserReferenceDto,
-    customer: {id: number},
+    customer: CustomerReferenceDto,
     characteristics: CharacteristicDto[]
 }
 

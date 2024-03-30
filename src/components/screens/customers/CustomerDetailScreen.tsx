@@ -1,5 +1,5 @@
-import {Box, Typography} from "@mui/material";
-import {CustomerDto, ProductDto, SearchRequest} from "../../../interface/Interfaces";
+import {Box, Typography, IconButton} from "@mui/material";
+import {CustomerDto, ProductCommand, ProductDto, SearchRequest} from "../../../interface/Interfaces";
 import {useEffect, useState} from "react";
 import api from "../../../service/api";
 import {useNavigate, useParams} from "react-router-dom";
@@ -7,10 +7,30 @@ import CustomButton from "../../common/CustomButton";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CustomTable from "../../common/CustomTable";
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import QRCode from 'react-qr-code';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CustomNotification from "../../common/CustomNotification";
+import FormInput from "../../common/FormInput";
+import {COLORS} from "../../../constants/theme";
+import CustomDialog from "../../common/CustomDialog";
+import {useSelector} from "react-redux";
+import CustomTwoSelectAndInput from "../../common/CustomTwoSelectAndInput";
+
+const characteristics = {
+    "ZLATO": [{id: "BIJELO", name: "BIJELO"}, {id: "ŽUTO", name: "ŽUTO"}, {id: "CRVENO", name: "CRVENO"}],
+    "KAMEN": [{id: "PRINCEZA", name: "PRINCEZA"}, {id: "BRILJANT", name: "BRILJANT"}, {id: "OVAL", name: "OVAL"}, {id: "SRCE", name: "SRCE"}],
+    "TEŽINA": [{id: "TEŽINA", name: "TEŽINA"}],
+    "VELIČINA": [{id: "VELIČINA", name: "VELIČINA"}],
+    "ŠIRINA": [{id: "ŠIRINA", name: "ŠIRINA"}],
+}
 const CustomerDetailScreen = () => {
     const { customerId } = useParams();
+    const user = useSelector((state: any) => state.user);
     const [customer, setCustomer] = useState<CustomerDto | null>(null);
     const [products, setProducts] = useState<ProductDto[]>([]);
+    const [productId, setProductId] = useState<number>();
+    const [showQrCodeDialog, setShowQrCodeDialog] = useState<boolean>(false);
     const [apiCarrier, setApiCarrier] = useState<SearchRequest>({
         page: 0, size: 10,
         searchFilter: {
@@ -23,6 +43,21 @@ const CustomerDetailScreen = () => {
             logicalOperator: "AND"
         }
     })
+    const [openDialogAddProduct, setOpenDialogAddProduct] = useState<boolean>(false);
+    const [name, setName] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
+    const [errorName, setErrorName] = useState<string>("");
+    const [errorDescription, setErrorDescription] = useState<string>("");
+    const [customTwoSelectStates, setCustomTwoSelectStates] = useState<Array<{
+        dataFirstSelectId: any;
+        dataFirstSelect: any;
+        setDataFirstSelectId: Function;
+        dataSecondSelectId: any,
+        dataSecondSelect: any;
+        setDataSecondSelectId: Function;
+        dataInput: any;
+        setDataInput: Function;
+    }>>([]);
     const navigate = useNavigate();
     const fetchCustomer = () => {
         if (customerId) {
@@ -49,7 +84,7 @@ const CustomerDetailScreen = () => {
             product: product.name,
             status: product.status.code,
             user: product.currentUser.fullName,
-            actions: [<VisibilityIcon/>],
+            actions: [<VisibilityIcon/>, <QrCode2Icon/>],
         }));
     }
 
@@ -57,12 +92,118 @@ const CustomerDetailScreen = () => {
         navigate(`/products/${productId}`)
     }
 
+    const showQrCode = (productId: number) => {
+        setProductId(productId);
+        setShowQrCodeDialog(true)
+    }
+
+    const handleAddProduct = () => {
+        if (name === "" || description === "") {
+            if (name === "")
+                setErrorName("Field must not be empty.")
+            if (description === "")
+                setErrorDescription("Field must not be empty.")
+            return
+        }
+
+        const product : ProductCommand = {
+            name: name,
+            description: description,
+            customerId: Number(customerId),
+            characteristics: []
+        }
+        api.products.createProduct(user.id, product)
+            .then((response) => {
+                setOpenDialogAddProduct(false)
+                //mozda da ipak ne fetchas nego samo updejtas state
+                fetchCustomer()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+    const handleAddCustomTwoSelect = () => {
+        setCustomTwoSelectStates(prevState => [
+            ...prevState,
+            {
+                dataFirstSelectId: "",
+                dataFirstSelect: [{id: "ZLATO", name: "ZLATO"}, {id: "KAMEN", name: "KAMEN"}, {id: "ŠIRINA", name: "ŠIRINA"}, {id: "VELIČINA", name: "VELIČINA"}, {id: "TEŽINA", name: "TEŽINA"}],
+                setDataFirstSelectId: (value: any, index: number) => {
+                    // Update the state for the current component
+                    setCustomTwoSelectStates(prevState => {
+                        const newState = [...prevState];
+                        newState[index].dataSecondSelect = characteristics[value as keyof typeof characteristics] || [];
+                        newState[index].dataFirstSelectId = value;
+                        return newState;
+                    });
+                },
+                dataSecondSelectId: "",
+                dataSecondSelect: [],
+                setDataSecondSelectId: (value: any, index: number) => {
+                    // Update the state for the current component
+                    setCustomTwoSelectStates(prevState => {
+                        const newState = [...prevState];
+                        newState[index].dataSecondSelectId = value;
+                        return newState;
+                    });
+                },
+                dataInput: '',
+                setDataInput: (value: any, index: number) => {
+                    // Update the state for the current component
+                    setCustomTwoSelectStates(prevState => {
+                        const newState = [...prevState];
+                        newState[index].dataInput = value;
+                        return newState;
+                    });
+                }
+            }
+        ]);
+    };
+
     useEffect(() => {
         fetchCustomer()
     }, []);
 
+    useEffect(() => {
+        if(!openDialogAddProduct) {
+            setName('')
+            setDescription('')
+            setCustomTwoSelectStates([])
+        }
+    }, [openDialogAddProduct])
+
     return (
         <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    margin: '40px 30px 0',
+                }}>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <IconButton
+                        sx={{
+                            color: '#003E92',
+                            marginRight: 1,
+                            '&:hover': {
+                                backgroundColor: '#E6E6E6',
+                            },
+                        }}
+                        onClick={() => navigate("/overview")}>
+                        <ArrowBackIcon/>
+                    </IconButton>
+                    <Typography sx={{
+                        fontSize: '24px',
+                        fontStyle: 'normal',
+                        fontWeight: 700,
+                        lineHeight: 'normal',
+                        fontFamily: 'Source Sans Pro, sans-serif',
+                        color: '#0B2556'
+                    }}>
+                        Customer details
+                    </Typography>
+                </div>
+            </Box>
             <Box
                 sx={{
                     display: 'flex',
@@ -193,7 +334,7 @@ const CustomerDetailScreen = () => {
                     fontFamily: 'Source Sans Pro, sans-serif',
                     color: '#0B2556'
                 }}>
-                    Products
+                Products
                 </Typography>
                 {products.length > 0 &&
                     <CustomButton
@@ -202,9 +343,7 @@ const CustomerDetailScreen = () => {
                         buttonText="New product"
                         textColor="white"
                         Icon={<AddIcon />}
-                        handleClick={() => {
-
-                        }}
+                        handleClick={() => setOpenDialogAddProduct(true)}
                         width={190}
                     />}
             </Box>
@@ -214,9 +353,71 @@ const CustomerDetailScreen = () => {
                     data={createProductsForTable()}
                     editRow={editRow}
                     totalSize={products.length}
-                    deleteRow={() => {}}
+                    deleteRow={showQrCode}
                 />
             </Box>
+
+            <CustomDialog
+                title="New product"
+                open={openDialogAddProduct}
+                handleOpen={setOpenDialogAddProduct}
+                childrenForms={[
+                    <FormInput
+                        label="Name"
+                        type="text"
+                        errorMessage={errorName}
+                        setErrorMessage={setErrorName}
+                        setData={setName}/>,
+                    <FormInput
+                        label="Description"
+                        type="description"
+                        errorMessage={errorDescription}
+                        setErrorMessage={setErrorDescription}
+                        setData={setDescription}/>,
+                    ...customTwoSelectStates.map((state: any, index: number) => {
+                        return <CustomTwoSelectAndInput key={index} index={index} dataFirstSelect={state.dataFirstSelect} setDataFirstSelect={state.setDataFirstSelectId} dataSecondSelect={state.dataSecondSelect} setDataSecondSelect={state.setDataSecondSelectId} dataInput={state.dataInput} setDataInput={state.setDataInput}/>
+                    }),
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}>
+                        <IconButton
+                            disabled={customTwoSelectStates.length !== 0 && customTwoSelectStates[customTwoSelectStates.length - 1].dataInput === ''}
+                            sx={{
+                                color: COLORS.primary,
+                                '&:hover': {
+                                    backgroundColor: '#E6E6E6',
+                                },
+                            }}
+                            onClick={() => handleAddCustomTwoSelect()}>
+                            <AddIcon />
+                        </IconButton>
+                    </Box>
+                ]}
+
+                childrenButton={
+                    <CustomButton
+                        buttonColor={COLORS.primary}
+                        onHoverButtonColor={COLORS.tertiary}
+                        buttonText="Add product"
+                        textColor={COLORS.white}
+                        width={160}
+                        handleClick={handleAddProduct}/>
+                }
+            />
+            <CustomNotification
+                title="QR Code"
+                open={showQrCodeDialog}
+                description={<QRCode value={`{"id":"${productId}"}`}/>}
+                childrenButtons={[
+                    <CustomButton
+                        buttonColor="#E6E6E6"
+                        onHoverButtonColor="#CCCCCC"
+                        buttonText="Cancel"
+                        textColor="black"
+                        handleClick={() => setShowQrCodeDialog(false)}
+                    />
+                ]}/>
         </>
     )
 }

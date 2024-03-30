@@ -160,7 +160,7 @@ const CustomersScreen = () => {
             }}>
                 <Box sx={{margin: '24px 40px 0', position: 'relative', zIndex: '100'}}>
                     <CustomSearch
-                        handleSearch={handleSearch} childrenChecked={[]}
+                        handleSearch={handleSearch} childrenChecked={[]} placeholder="Search customer"
                     />
                 </Box>
                 <CustomButton
@@ -170,7 +170,7 @@ const CustomersScreen = () => {
                     textColor="white"
                     Icon={<AddIcon/>}
                     handleClick={() => setOpenDialogAddCustomer(true)}
-                    width={160}
+                    width={220}
                 />
             </Box>
             <Box sx={{margin: '-45px 40px 0'}}>

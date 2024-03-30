@@ -1,8 +1,10 @@
 import userSlice from "./userSlice";
+import tabOverviewSlice from "./tabOverviewSlice";
 
 const rootReducer = () => {
     return {
-        user: userSlice
+        user: userSlice,
+        tabOverview: tabOverviewSlice
     }
 }
 

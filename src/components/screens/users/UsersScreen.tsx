@@ -46,7 +46,10 @@ const UsersScreen = () => {
     const [searchInactive, setSearchInactive] = useState<boolean>(false);
     const [forcePasswordChange, setForcePasswordChange] = useState<boolean>(false);
     const [searchedString, setSearchedString] = useState<string>("")
-    const [role, setRole] = useState<any>([{id: 1, name: "FASER"}, {id: 2, name: "CNC"}, {id: 3, name: "POLIRER"}, {id: 4, name: "RUČNI RAD"}, {id: 5, name: "NARUDŽBA"}])
+    const [role, setRole] = useState<any>([{id: 1, name: "FASER"}, {id: 2, name: "CNC"}, {
+        id: 3,
+        name: "POLIRER"
+    }, {id: 4, name: "RUČNI RAD"}, {id: 5, name: "NARUDŽBA"}])
     const [roleId, setRoleId] = useState<number>()
 
     const [errorUsername, setErrorUsername] = useState<string>("")
@@ -162,7 +165,7 @@ const UsersScreen = () => {
 
     };
 
-    const fetchUsers =  () => {
+    const fetchUsers = () => {
         api.user.getUsers(apiCarrier).then((response) => {
             setTotalUsers(response.total);
             setUsers(response.data);
@@ -198,7 +201,7 @@ const UsersScreen = () => {
             }}>
                 <Box sx={{margin: '24px 40px 0', position: 'relative', zIndex: '100'}}>
                     <CustomSearch
-                        handleSearch={handleSearch} childrenChecked={[]}
+                        handleSearch={handleSearch} childrenChecked={[]} placeholder="Search user"
                     />
                 </Box>
                 <CustomButton
@@ -208,7 +211,7 @@ const UsersScreen = () => {
                     textColor="white"
                     Icon={<AddIcon/>}
                     handleClick={() => setOpenDialogAddUser(true)}
-                    width={154}
+                    width={160}
                 />
             </Box>
             <Box sx={{margin: '-45px 40px 0'}}>

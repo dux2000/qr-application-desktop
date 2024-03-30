@@ -8,6 +8,7 @@ import TabContext from "@mui/lab/TabContext";
 import Tab from "@mui/material/Tab";
 import {COLORS} from "../../constants/theme";
 import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 
 interface StyledTabProps {
     label: string;
@@ -26,14 +27,19 @@ const StyledTab = styled((props: StyledTabProps) => (
     }
 }));
 const TabScreen = () => {
+    const tabOverview = useSelector((state: any) => state.tabOverview);
+    const dispatch = useDispatch();
     const [value, setValue] = useState<string>('1');
-
+    console.log(tabOverview.value)
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setValue(newValue);
+        dispatch({
+            type: "CHANGE_VALUE",
+            payload: newValue,
+        });
     };
 
   return (
-      <TabContext value={value}>
+      <TabContext value={tabOverview.value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleChange} aria-label="lab API tabs example">
                   <StyledTab label="Users" value="1"/>

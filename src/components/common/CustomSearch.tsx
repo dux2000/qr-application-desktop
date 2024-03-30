@@ -2,7 +2,7 @@ import { Box, IconButton, InputBase, Paper } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 
-const CustomSearch = ({childrenChecked, handleSearch} : {childrenChecked: JSX.Element[], handleSearch: Function}) => {
+const CustomSearch = ({childrenChecked, handleSearch, placeholder} : {childrenChecked: JSX.Element[], handleSearch: Function, placeholder: string}) => {
     const [focused, setFocused] = useState<boolean>(false)
     const containerRef = useRef<any>(null);
 
@@ -60,7 +60,7 @@ const CustomSearch = ({childrenChecked, handleSearch} : {childrenChecked: JSX.El
                         fontSize: '14px',
                         fontWeight: 400, 
                     }}
-                    placeholder="Search user"
+                    placeholder={placeholder}
                     inputProps={{ 'aria-label': 'search google maps' }}
                     onChange={(e) => handleSearch(e.target.value)}
                 />

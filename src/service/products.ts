@@ -1,7 +1,19 @@
-import { ProductDto, SearchRequest, SearchResponse} from "../interface/Interfaces";
+import {ProductCommand, ProductDto, SearchRequest, SearchResponse} from "../interface/Interfaces";
 import {api_endpoint} from "../boot/axios";
 
 const products = {
+    async getProductById(id: string): Promise<ProductDto> {
+        const url = `products/${id}`
+
+        return api_endpoint.get(url)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => {
+                throw error;
+            })
+    },
+
     async getProducts(request: SearchRequest): Promise<SearchResponse<ProductDto>> {
         const url = 'products/filter'
 
@@ -15,9 +27,21 @@ const products = {
     },
 
     async getProductRevision(id: string): Promise<ProductDto[]> {
-        const url = `products/${id}`
+        const url = `products/revision/${id}`
 
         return api_endpoint.get(url)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => {
+                throw error;
+            })
+    },
+
+    async createProduct(userId: number, product: ProductCommand): Promise<ProductDto> {
+        const url = `products/${userId}`
+
+        return api_endpoint.post(url, product)
             .then((response) => {
                 return response.data
             })

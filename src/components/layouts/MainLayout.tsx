@@ -59,6 +59,8 @@ export default function MainLayout() {
                 // Navigate to the login page if no login information is found in local storage
                 navigate("/login");
             }
+        } else {
+            navigate("/overview")
         }
     }, [user.isLoggedIn]);
 
