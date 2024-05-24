@@ -57,7 +57,7 @@ const CustomTwoSelectAndInput = ({index, dataFirstSelect, setDataFirstSelect, da
         display: 'flex',
         flexDirection: 'row',
         border: `1px solid ${COLORS.primary}`,
-        borderRadius: '5px',
+        borderRadius: '20px',
         overflow: 'hidden'
     }}>
         <Box sx={{ flex: 1, borderRight: `1px solid ${COLORS.primary}` }}>

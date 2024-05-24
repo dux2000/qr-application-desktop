@@ -18,11 +18,8 @@ import {useSelector} from "react-redux";
 import CustomTwoSelectAndInput from "../../common/CustomTwoSelectAndInput";
 
 const characteristics = {
-    "ZLATO": [{id: "BIJELO", name: "BIJELO"}, {id: "ŽUTO", name: "ŽUTO"}, {id: "CRVENO", name: "CRVENO"}],
-    "KAMEN": [{id: "PRINCEZA", name: "PRINCEZA"}, {id: "BRILJANT", name: "BRILJANT"}, {id: "OVAL", name: "OVAL"}, {id: "SRCE", name: "SRCE"}],
-    "TEŽINA": [{id: "TEŽINA", name: "TEŽINA"}],
     "VELIČINA": [{id: "VELIČINA", name: "VELIČINA"}],
-    "ŠIRINA": [{id: "ŠIRINA", name: "ŠIRINA"}],
+    "BOJA": [{id: "BOJA", name: "BOJA"}],
 }
 const CustomerDetailScreen = () => {
     const { customerId } = useParams();
@@ -82,7 +79,7 @@ const CustomerDetailScreen = () => {
         return products.map((product) => ({
             id: product.id,
             product: product.name,
-            status: product.status.code,
+            status: product.status.name,
             user: product.currentUser.fullName,
             actions: [<VisibilityIcon/>, <QrCode2Icon/>],
         }));
@@ -110,8 +107,15 @@ const CustomerDetailScreen = () => {
             name: name,
             description: description,
             customerId: Number(customerId),
-            characteristics: []
+            characteristics: customTwoSelectStates.map((state) => {
+                return {
+                    code: state.dataFirstSelectId as string,
+                    globalCode: state.dataSecondSelectId as string,
+                    value: state.dataInput as string
+                }
+            })
         }
+
         api.products.createProduct(user.id, product)
             .then((response) => {
                 setOpenDialogAddProduct(false)
@@ -127,7 +131,7 @@ const CustomerDetailScreen = () => {
             ...prevState,
             {
                 dataFirstSelectId: "",
-                dataFirstSelect: [{id: "ZLATO", name: "ZLATO"}, {id: "KAMEN", name: "KAMEN"}, {id: "ŠIRINA", name: "ŠIRINA"}, {id: "VELIČINA", name: "VELIČINA"}, {id: "TEŽINA", name: "TEŽINA"}],
+                dataFirstSelect: [{id: "BOJA", name: "BOJA"}, {id: "VELIČINA", name: "VELIČINA"}],
                 setDataFirstSelectId: (value: any, index: number) => {
                     // Update the state for the current component
                     setCustomTwoSelectStates(prevState => {
@@ -336,16 +340,16 @@ const CustomerDetailScreen = () => {
                 }}>
                 Products
                 </Typography>
-                {products.length > 0 &&
-                    <CustomButton
-                        buttonColor="#1E4B92"
-                        onHoverButtonColor="#0B2556"
-                        buttonText="New product"
-                        textColor="white"
-                        Icon={<AddIcon />}
-                        handleClick={() => setOpenDialogAddProduct(true)}
-                        width={190}
-                    />}
+
+                <CustomButton
+                    buttonColor="#1E4B92"
+                    onHoverButtonColor="#0B2556"
+                    buttonText="New product"
+                    textColor="white"
+                    Icon={<AddIcon />}
+                    handleClick={() => setOpenDialogAddProduct(true)}
+                    width={200}
+                />
             </Box>
             <Box sx={{margin: '30px 40px 0'}}>
                 <CustomTable

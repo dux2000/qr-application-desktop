@@ -29,15 +29,14 @@ export default function HeaderComponent({username, description} : {username?: st
     }
 
     return (
-        <AppBar position="static" sx={{height: 70, backgroundColor: COLORS.secondary, boxShadow: 'none'}}>
+        <AppBar position="static" sx={{height: 70, backgroundColor: COLORS.primary, boxShadow: 'none'}}>
             <Toolbar sx={{justifyContent: 'space-between'}}>
                 <div style={{display: 'flex'}}>
                     <Box sx={{
                         width: '60px',
                         height: '60px',
                         backgroundSize: 'cover',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundImage: `url(${require("../../assets/svgs/krizek.png")})`,
+                        backgroundRepeat: 'no-repeat'
                     }}/>
                     {description && <Typography sx={{
                         paddingLeft: '16px',

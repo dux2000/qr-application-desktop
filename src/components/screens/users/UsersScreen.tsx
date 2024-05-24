@@ -46,10 +46,10 @@ const UsersScreen = () => {
     const [searchInactive, setSearchInactive] = useState<boolean>(false);
     const [forcePasswordChange, setForcePasswordChange] = useState<boolean>(false);
     const [searchedString, setSearchedString] = useState<string>("")
-    const [role, setRole] = useState<any>([{id: 1, name: "FASER"}, {id: 2, name: "CNC"}, {
-        id: 3,
-        name: "POLIRER"
-    }, {id: 4, name: "RUČNI RAD"}, {id: 5, name: "NARUDŽBA"}])
+    const [role, setRole] = useState<any>([{id: 8, name: "NARUDŽBE"}, {
+        id: 9,
+        name: "RADNIK"
+    }])
     const [roleId, setRoleId] = useState<number>()
 
     const [errorUsername, setErrorUsername] = useState<string>("")
@@ -205,7 +205,7 @@ const UsersScreen = () => {
                     />
                 </Box>
                 <CustomButton
-                    buttonColor="#1E4B92"
+                    buttonColor={COLORS.secondary}
                     onHoverButtonColor="#0B2556"
                     buttonText="New user"
                     textColor="white"

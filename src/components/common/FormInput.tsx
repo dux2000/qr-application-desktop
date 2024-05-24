@@ -78,7 +78,7 @@ function FormInputText({
         fontFamily: 'QSBold',
         fontSize: !isFocused && inputValue === '' ? '16px' : '18px',
         fontWeight: !isFocused && inputValue === '' ? 400 : 300,
-        lineHeight: !isFocused && inputValue === '' ? '20px' : '14px',
+        lineHeight: !isFocused && inputValue === '' ? '20px' : '16px',
         color: errorMessage ? '#D4423F' : COLORS.primary,
     };
 

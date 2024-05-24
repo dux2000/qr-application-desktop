@@ -6,6 +6,8 @@ import api from "../../../service/api";
 import {useNavigate, useParams} from "react-router-dom";
 import dayjs from "dayjs";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CustomButton from "../../common/CustomButton";
+import AddIcon from "@mui/icons-material/Add";
 
 const ProductDetailScreen = () => {
   const { productId } = useParams();
@@ -15,11 +17,22 @@ const ProductDetailScreen = () => {
   const createProductRevisionForTable = () => {
     return productRevision.map((product) => ({
         name: product.name,
-        status: product.status.description,
+        status: product.status.name,
         worker: product.currentUser.fullName + ' - ' + product.currentUser.role,
         updated: product.updated
     }));
   };
+
+  const createCharacteristicsForTable = () => {
+      if (product?.characteristics === undefined || product?.characteristics === null)
+          return [];
+
+      return product?.characteristics.map((characteristic) => ({
+          name: characteristic.globalCode,
+          subname: characteristic.code,
+          value: characteristic.value
+      }));
+  }
   const fetchProductRevision = () => {
     if (productId) {
       api.products.getProductRevision(productId)
@@ -382,15 +395,67 @@ const ProductDetailScreen = () => {
                       {product?.description === "" ? '-' : product?.description}
                   </Typography>
               </Box>
+
+          </Box>
+          {/* divider */}
+          <Box
+              sx={{
+                  margin: '40px 40px 0',
+                  height: '1px',
+                  backgroundColor: '#E6E6E6'
+              }}
+          />
+          <Box sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '40px 40px 0',
+
+          }}>
+              <Typography sx={{
+                  fontSize: '24px',
+                  fontStyle: 'normal',
+                  fontWeight: 700,
+                  lineHeight: 'normal',
+                  fontFamily: 'Source Sans Pro, sans-serif',
+                  color: '#0B2556'
+              }}>
+                  Characteristics
+              </Typography>
           </Box>
           <Box sx={{margin: '30px 40px 20px'}}>
-          <CustomTable
-              tableHead={["Name", "Status", "Current worker", "Updated"]}
-              data={createProductRevisionForTable()}
-              editRow={() => {}}
-              deleteRow={() => {}}
-              totalSize={productRevision.length}
-          />
+              <CustomTable
+                  tableHead={["Name", "Subname", "Value"]}
+                  data={createCharacteristicsForTable()}
+                  editRow={() => {}}
+                  deleteRow={() => {}}
+                  totalSize={product?.characteristics === null ? 0 : product?.characteristics.length || 0}
+              />
+          </Box>
+          <Box sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '40px 40px 0',
+
+          }}>
+              <Typography sx={{
+                  fontSize: '24px',
+                  fontStyle: 'normal',
+                  fontWeight: 700,
+                  lineHeight: 'normal',
+                  fontFamily: 'Source Sans Pro, sans-serif',
+                  color: '#0B2556'
+              }}>
+                  Product history
+              </Typography>
+          </Box>
+          <Box sx={{margin: '30px 40px 20px'}}>
+            <CustomTable
+                tableHead={["Name", "Status", "Current worker", "Updated"]}
+                data={createProductRevisionForTable()}
+                editRow={() => {}}
+                deleteRow={() => {}}
+                totalSize={productRevision.length}
+            />
         </Box>
       </>
   )

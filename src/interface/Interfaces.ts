@@ -53,6 +53,7 @@ export interface ContactDto {
 export interface StatusDto {
     code: string;
     description: string;
+    name: string;
 }
 
 export interface UserDto {

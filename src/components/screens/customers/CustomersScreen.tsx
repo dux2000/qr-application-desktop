@@ -182,7 +182,7 @@ const CustomersScreen = () => {
                     totalSize={totalCustomers}
                     handlePageChange={handlePageChange}
                     messageForEmptyDataBold={"No Customers match your search"}
-                    messageForEmptyDataRegular={"Try to serach by another criteria"}
+                    messageForEmptyDataRegular={"Try to search by another criteria"}
                 />
             </Box>
 
@@ -216,7 +216,7 @@ const CustomersScreen = () => {
                         onHoverButtonColor={COLORS.tertiary}
                         buttonText="Add customer"
                         textColor={COLORS.white}
-                        width={130}
+                        width={180}
                         handleClick={handleAddCustomer}/>
                 }
             />
