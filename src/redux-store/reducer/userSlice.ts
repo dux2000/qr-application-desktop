@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import {UserInterface} from "../../interface/Interfaces";
+import {UserDto, UserInterface} from "../../interface/Interfaces";
 
 const initialState: UserInterface = {
     id: 0,
@@ -13,14 +13,13 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        loginSuccessAction: (state: any, action: PayloadAction<UserInterface>) => {
+        loginSuccessAction: (state: any, action: PayloadAction<UserDto>) => {
             const { id, username, fullName } =
                 action.payload;
             state.id = id;
             state.username = username;
             state.fullName = fullName;
             state.isLoggedIn = true;
-            console.log(state)
         },
         loginFailedAction: (state: any, action: PayloadAction<any>) => {
             state.error = action.payload.response.data.message;

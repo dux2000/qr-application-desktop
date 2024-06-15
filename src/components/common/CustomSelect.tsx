@@ -52,7 +52,6 @@ const CustomSelect = ({ label, setData, data, defaultValue, errorMessage, setErr
           id="demo-simple-select"
           label={label}
           onChange={(e) => {
-              console.log(e.target.value)
             setData(e.target.value); 
             setInputValue(e.target.value as number); 
             if(setErrorMessage)
@@ -63,7 +62,7 @@ const CustomSelect = ({ label, setData, data, defaultValue, errorMessage, setErr
           defaultValue={defaultValue}
         >
             {data.map((value: any) => {
-                return <MenuItem value={value.id}>{value.name}</MenuItem>
+                return <MenuItem value={value.id === undefined ? value.code : value.id}>{value.name}</MenuItem>
             })}
         </CssCustomSelect>
         {errorMessage !== "" && 

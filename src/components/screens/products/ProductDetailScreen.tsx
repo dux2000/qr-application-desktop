@@ -173,6 +173,37 @@ const ProductDetailScreen = () => {
                           {product?.status.description}
                       </Typography>
                   </Box>
+
+                  <Box
+                      sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          width: '100%'
+                      }}>
+                      <Typography
+                          sx={{
+                              marginBottom: '4px',
+                              fontSize: '14px',
+                              fontStyle: 'normal',
+                              fontWeight: 600,
+                              lineHeight: 'normal',
+                              fontFamily: 'Source Sans Pro, sans-serif',
+                              color: '#0B2556'
+                          }}>
+                          Type
+                      </Typography>
+                      <Typography
+                          sx={{
+                              fontSize: '16px',
+                              fontStyle: 'normal',
+                              fontWeight: 400,
+                              lineHeight: 'normal',
+                              fontFamily: 'Source Sans Pro, sans-serif',
+                              color: 'black'
+                          }}>
+                          {product?.type.name}
+                      </Typography>
+                  </Box>
                   <Box
                       sx={{
                           display: 'flex',
@@ -201,36 +232,6 @@ const ProductDetailScreen = () => {
                               color: 'black'
                           }}>
                           {product?.customer.fullName}
-                      </Typography>
-                  </Box>
-                  <Box
-                      sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          width: '100%'
-                      }}>
-                      <Typography
-                          sx={{
-                              marginBottom: '4px',
-                              fontSize: '14px',
-                              fontStyle: 'normal',
-                              fontWeight: 600,
-                              lineHeight: 'normal',
-                              fontFamily: 'Source Sans Pro, sans-serif',
-                              color: '#0B2556'
-                          }}>
-                          Current worker
-                      </Typography>
-                      <Typography
-                          sx={{
-                              fontSize: '16px',
-                              fontStyle: 'normal',
-                              fontWeight: 400,
-                              lineHeight: 'normal',
-                              fontFamily: 'Source Sans Pro, sans-serif',
-                              color: 'black'
-                          }}>
-                          {product?.currentUser.fullName + ' - ' + product?.currentUser.role}
                       </Typography>
                   </Box>
               </Box>
@@ -318,7 +319,7 @@ const ProductDetailScreen = () => {
                               fontFamily: 'Source Sans Pro, sans-serif',
                               color: '#0B2556'
                           }}>
-                          Updated by
+                          Current worker
                       </Typography>
                       <Typography
                           sx={{
@@ -329,7 +330,7 @@ const ProductDetailScreen = () => {
                               fontFamily: 'Source Sans Pro, sans-serif',
                               color: 'black'
                           }}>
-                          {product?.updatedBy === null ? '-' : product?.updatedBy?.fullName}
+                          {product?.currentUser.fullName + ' - ' + product?.currentUser.role}
                       </Typography>
                   </Box>
                   <Box

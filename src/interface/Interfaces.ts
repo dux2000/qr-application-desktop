@@ -13,6 +13,7 @@ export interface ProductCommand {
     name: string,
     description: string,
     status?: string,
+    type: string,
     currentUserId?: number,
     customerId: number,
     characteristics: CharacteristicDto[]
@@ -22,6 +23,7 @@ export interface ProductDto {
     name: string,
     description: string,
     status: StatusDto,
+    type: ProductTypeDto,
     created: string,
     createdBy: UserReferenceDto,
     updated: string,
@@ -31,6 +33,10 @@ export interface ProductDto {
     characteristics: CharacteristicDto[]
 }
 
+export interface ProductTypeDto {
+    code: string,
+    name: string
+}
 export interface CharacteristicDto {
     code: string,
     globalCode: string,

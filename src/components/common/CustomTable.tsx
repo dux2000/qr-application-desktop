@@ -89,7 +89,8 @@ const StyledTableCell = styled(TableCell)(() => ({
 const CustomTable = ({
   tableHead, 
   data, 
-  editRow, 
+  editRow,
+  customAction,
   deleteRow, 
   totalSize, 
   handlePageChange, 
@@ -98,7 +99,8 @@ const CustomTable = ({
     tableHead: string[], 
     data: any[], 
     editRow: Function, 
-    deleteRow: Function, 
+    deleteRow: Function,
+    customAction?: Function,
     totalSize: number, 
     handlePageChange?: Function,
     messageForEmptyDataBold?: string,
@@ -135,9 +137,9 @@ const CustomTable = ({
             {Object.keys(row).map(value => {
               if(value === "actions") {
                 return <StyledTableCell align="right">
-                          <IconButton 
-                            sx={{
-                              color: '#1E4B92',
+                  <IconButton
+                      sx={{
+                        color: '#1E4B92',
                               '&:hover': {
                                 backgroundColor: '#E6E6E6',
                               },
@@ -162,6 +164,18 @@ const CustomTable = ({
                           >
                               {row.actions[1]}
                           </IconButton>
+                          {customAction === undefined ? null : <IconButton
+                              sx={{
+                                color: 'green',
+                                '&:hover': {
+                                  backgroundColor: '#E6E6E6',
+                                },
+                              }}
+                              onClick={() => customAction(row.id)}
+                            >
+                            {row.actions[2]}
+                          </IconButton>
+                          }
                         </StyledTableCell>
               }
               if(value === "id")

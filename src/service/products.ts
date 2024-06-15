@@ -1,4 +1,4 @@
-import {ProductCommand, ProductDto, SearchRequest, SearchResponse} from "../interface/Interfaces";
+import {ProductCommand, ProductDto, ProductTypeDto, SearchRequest, SearchResponse} from "../interface/Interfaces";
 import {api_endpoint} from "../boot/axios";
 
 const products = {
@@ -42,6 +42,30 @@ const products = {
         const url = `products/${userId}`
 
         return api_endpoint.post(url, product)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => {
+                throw error;
+            })
+    },
+
+    async getTypes(): Promise<ProductTypeDto[]> {
+        const url = 'products/types'
+
+        return api_endpoint.get(url)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => {
+                throw error;
+            })
+    },
+
+    async deleteProduct(id: string): Promise<void> {
+        const url = `products/${id}`
+
+        return api_endpoint.delete(url)
             .then((response) => {
                 return response.data
             })

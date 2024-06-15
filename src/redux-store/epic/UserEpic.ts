@@ -2,6 +2,7 @@ import { ofType } from "redux-observable"
 import { catchError, from, map, mergeMap, of } from "rxjs"
 import api from "../../service/api"
 import { changePasswordFailedAction, changePasswordSuccessAction, clearMessageError, loginFailedAction, loginSuccessAction, registerFailedAction, registerSuccessAction, signOutAction } from "../reducer/userSlice"
+import {saveProductTypes} from "../reducer/commonSlice";
 
 const LOGIN_USER = 'LOGIN_USER';
 const SIGN_OUT = 'SIGN_OUT';
@@ -17,9 +18,18 @@ export const UserEpic = (action$: any, state$: any) => {
                     return from(
                         api.user.loginUser(action.payload.username, action.payload.password)
                     ).pipe(
-                        map((response: any) => {
+                        mergeMap((response) => {
                             if (response) {
-                                return loginSuccessAction(response);
+                                return from(api.products.getTypes())
+                                    .pipe(
+                                        mergeMap((productTypes) => [
+                                            loginSuccessAction(response),
+                                            saveProductTypes(productTypes)
+                                        ]),
+                                        catchError(err => of(loginFailedAction(err)))
+                                    )
+                            } else {
+                                return of(loginFailedAction(new Error("No response from login")));
                             }
                         }),
                         catchError((err) => {

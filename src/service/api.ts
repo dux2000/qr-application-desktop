@@ -9,7 +9,7 @@ const api = {
     clothes: clothes,
     status: status,
     user: user,
-    products: products
+    products: products,
 };
 
 export default api;
