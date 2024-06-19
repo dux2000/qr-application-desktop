@@ -66,7 +66,8 @@ export interface UserDto {
     id: number;
     username: string;
     fullName: string;
-    role: string
+    role: string,
+    update: boolean
 }
 
 export interface UserReferenceDto {
@@ -78,8 +79,11 @@ export interface UserInterface {
     id : number,
     username: string,
     fullName: string,
-    error: string,
-    isLoggedIn: boolean,
+    error?: string,
+    isLoggedIn?: boolean,
+    update: boolean,
+    role?: string,
+    password?: string
 }
 
 export interface SearchRequest {

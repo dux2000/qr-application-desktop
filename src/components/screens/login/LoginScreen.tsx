@@ -25,7 +25,7 @@ const LoginScreen = () => {
     }
 
     useEffect(() => {
-        if (user.system) {
+        if (user.update) {
             navigate("/change-password");
         } else if(user.isLoggedIn) {
             const loginInfo = {

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {SearchFilter, SearchRequest, UserDto} from "../../../interface/Interfaces";
+import {SearchFilter, SearchRequest, UserDto, UserInterface} from "../../../interface/Interfaces";
 import api from "../../../service/api";
 import {Box, Typography} from "@mui/material";
 import CustomButton from "../../common/CustomButton";
@@ -123,10 +123,9 @@ const UsersScreen = () => {
 
         if (user) {
             setUserId(user.id)
-
             setUsername(user.username)
             setFullName(user.fullName)
-
+            setForcePasswordChange(user.update)
         }
 
         setOpenDialogEditUser(true)
@@ -162,7 +161,31 @@ const UsersScreen = () => {
     };
 
     const handleUpdateUser = () => {
+        if (username === "" || fullName === "") {
+            if (username === "")
+                setErrorUsername("Field must not be empty.")
+            if (fullName === "")
+                setErrorFullName("Field must not be empty.")
 
+            return
+        }
+
+        const user: UserInterface = {
+            id: userId,
+            username: username,
+            fullName: fullName,
+            update: forcePasswordChange,
+            password: password
+        }
+
+        api.user.updateUser(user)
+            .then((response) => {
+                fetchUsers()
+                setOpenDialogEditUser(false);
+            })
+            .catch(error => {
+                console.log(error)
+            })
     };
 
     const fetchUsers = () => {

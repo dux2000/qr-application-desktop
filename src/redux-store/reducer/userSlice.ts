@@ -7,6 +7,7 @@ const initialState: UserInterface = {
     fullName: "",
     error: "",
     isLoggedIn: false,
+    update: false
 };
 
 const userSlice = createSlice({
@@ -14,12 +15,13 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         loginSuccessAction: (state: any, action: PayloadAction<UserDto>) => {
-            const { id, username, fullName } =
+            const { id, username, fullName, update } =
                 action.payload;
             state.id = id;
             state.username = username;
             state.fullName = fullName;
             state.isLoggedIn = true;
+            state.update = update;
         },
         loginFailedAction: (state: any, action: PayloadAction<any>) => {
             state.error = action.payload.response.data.message;
@@ -48,9 +50,10 @@ const userSlice = createSlice({
         },
         changePasswordSuccessAction: (
             state: any,
-            action: PayloadAction<UserInterface>
+            action: PayloadAction<UserDto>
         ) => {
-            state.system = action.payload;
+            console.log("Change Password Success")
+            state.update = action.payload.update;
             state.error = "";
         },
         changePasswordFailedAction: (state: any, action: PayloadAction<any>) => {

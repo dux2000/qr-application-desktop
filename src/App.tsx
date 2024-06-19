@@ -6,14 +6,15 @@ import MainLayout from "./components/layouts/MainLayout";
 import CustomerDetailScreen from "./components/screens/customers/CustomerDetailScreen";
 import ProductDetailScreen from "./components/screens/products/ProductDetailScreen";
 import TabScreen from "./components/screens/TabScreen";
+import ChangePasswordScreen from "./components/screens/change-password/ChangePasswordScreen";
 
 export default function App() {
   const router = createBrowserRouter(
     [
-      {
-        path: "/login",
-        element: <LoginScreen />,
-      },
+        {
+            path: "/login",
+            element: <LoginScreen />,
+        },
         {
             path: "/",
             element: <MainLayout />,
@@ -35,6 +36,10 @@ export default function App() {
         {
             path: "/customers/:customerId",
             element: <CustomerDetailScreen />
+        },
+        {
+            path: "/change-password",
+            element: <ChangePasswordScreen />
         }
     ]
   );
