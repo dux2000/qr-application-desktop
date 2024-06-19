@@ -1,30 +1,14 @@
-import {Box, Container, styled} from "@mui/material";
-
-import {ReactNode, useEffect, useState} from "react";
+import {Container} from "@mui/material";
+import { useEffect} from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
 import { useDispatch, useSelector } from "react-redux";
-
 import HeaderComponent from "../common/HeaderComponent";
-import UsersScreen from "../screens/users/UsersScreen";
-import {COLORS} from "../../constants/theme";
-import ProductsScreen from "../screens/products/ProductsScreen";
-import CustomersScreen from "../screens/customers/CustomersScreen";
-
-
-
 export default function MainLayout() {
     const user = useSelector((state: any) => state.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // TODO: remove in production, just for easier editing
-        // navigate("/price-lists/");
-
         if (!user.isLoggedIn) {
             // Attempt to retrieve login information from local storage
             const localStorageLoginInfoStr = localStorage.getItem("plmLoginInfo");
