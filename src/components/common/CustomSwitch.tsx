@@ -2,6 +2,7 @@
 import { FormControlLabel, FormHelperText, Switch, styled } from '@mui/material';
 import mySvg from '../../assets/svgs/switch.svg'
 import mySvgRed from '../../assets/svgs/switch_red.svg'
+import {COLORS} from "../../constants/theme";
 
 const CustomSwitchStyled = styled(Switch, {
   shouldForwardProp: (prop) => prop !== "" && prop !== undefined
@@ -16,7 +17,7 @@ const CustomSwitchStyled = styled(Switch, {
       '&.Mui-checked': {
         color: '#fff',
         '& + .MuiSwitch-track': {
-          backgroundColor: errorMessage ? '#D4423F' : '#1E4B92',
+          backgroundColor: errorMessage ? '#D4423F' : COLORS.primary,
           opacity: 1,
           border: 0,
           transition: 'none'
@@ -31,7 +32,7 @@ const CustomSwitchStyled = styled(Switch, {
     },
     '& .MuiSwitch-thumb': {
       boxSizing: 'border-box',
-      backgroundColor: '#1E4B92',
+      backgroundColor: COLORS.primary,
       width: 16,
       height: 16,
       marginTop: 6,
@@ -41,7 +42,7 @@ const CustomSwitchStyled = styled(Switch, {
     },
     '& .MuiSwitch-track': {
       borderRadius: 32 / 2,
-      border: '1px solid #1E4B92',
+      border: `1px solid ${COLORS.primary}`,
       backgroundColor: 'white',
       opacity: 1,
       transition: 'none'
@@ -58,8 +59,8 @@ const CustomSwitch = ({label, checked, handleChange, errorMessage, setErrorMessa
           setErrorMessage("") 
       }}
       sx={{ '& .MuiTypography-root': {
-              color: errorMessage ? '#D4423F' : '#1E4B92',
-              fontFamily: 'Source Sans Pro, sans-serif', 
+              color: errorMessage ? '#D4423F' : COLORS.primary,
+              fontFamily: 'QSBold',
               fontWeight: 400, 
               lineHeight: 'normal', 
               fontSize: '16px',
@@ -71,7 +72,7 @@ const CustomSwitch = ({label, checked, handleChange, errorMessage, setErrorMessa
     {errorMessage !== "" && 
       <FormHelperText sx={{
         color: '#D4423F',
-        fontFamily: 'Source Sans Pro, sans-serif',
+        fontFamily: 'QSBold',
         fontWeight: 300,
         lineHeight: '16px',
         fontSize: '14px'

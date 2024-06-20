@@ -14,11 +14,12 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import {COLORS} from "../../../constants/theme";
 import CustomSelect from "../../common/CustomSelect";
+import useDebounce from "../../../state/hooks/useDebounce";
+import CustomSimpleSearch from "../../common/CustomSimpleSearch";
 
 const UsersScreen = () => {
     const [users, setUsers] = useState<UserDto[]>([]);
     const [totalUsers, setTotalUsers] = useState<number>(0);
-    const [deleteFlag, setDeleteFlag] = useState<boolean>(false);
     const [apiCarrier, setApiCarrier] = useState<SearchRequest>({
         page: 0, size: 10,
         searchFilter: {
@@ -58,9 +59,9 @@ const UsersScreen = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const debounceValue = useDebounce(searchedString, 400);
 
-    function handleSearch(searchedValue: string) {
-        setSearchedString(searchedValue)
+    function handleSearch() {
 
         const filter: SearchFilter = {
             searchCriteria: [
@@ -74,12 +75,12 @@ const UsersScreen = () => {
                     searchCriteria: [
                         {
                             filterKey: "username",
-                            value: searchedValue,
+                            value: searchedString,
                             operation: "cn",
                         },
                         {
                             filterKey: "fullName",
-                            value: searchedValue,
+                            value: searchedString,
                             operation: "cn",
                         }
                     ],
@@ -108,7 +109,6 @@ const UsersScreen = () => {
 
         api.user.createUser(username, fullName, password, role.filter((x: any) => x.id === roleId)[0].name)
             .then((response) => {
-                setDeleteFlag(true);
                 setOpenDialogAddUser(false);
                 setOpenAddNotification(true)
                 setUserInfo(response)
@@ -212,6 +212,10 @@ const UsersScreen = () => {
         }
     }, [openDialogAddUser, openDialogEditUser])
 
+    useEffect(() => {
+        handleSearch()
+    }, [debounceValue]);
+
     return (
         <>
             <Box sx={{
@@ -219,12 +223,12 @@ const UsersScreen = () => {
                 flexDirection: "row",
                 justifyContent: 'space-between',
                 alignItems: "center",
-                marginBottom: "10px",
+                marginBottom: "60px",
                 marginRight: "40px"
             }}>
-                <Box sx={{margin: '24px 40px 0', position: 'relative', zIndex: '100'}}>
-                    <CustomSearch
-                        handleSearch={handleSearch} childrenChecked={[]} placeholder="Search user"
+                <Box sx={{margin: '0 40px 0', position: 'relative', zIndex: '100'}}>
+                    <CustomSimpleSearch
+                        handleSearch={setSearchedString} childrenChecked={[]} placeholder="Search user"
                     />
                 </Box>
                 <CustomButton
@@ -317,17 +321,13 @@ const UsersScreen = () => {
                 ]}
                 childrenSwitch={[
                     <CustomSwitch
-                        label="Activate User"
-                        checked={active}
-                        handleChange={setActive}/>,
-                    <CustomSwitch
                         label="Force password change"
                         checked={forcePasswordChange}
                         handleChange={setForcePasswordChange}/>,
                 ]}
                 childrenButton={
                     <CustomButton
-                        buttonColor="#1E4B92"
+                        buttonColor={COLORS.primary}
                         onHoverButtonColor="#0B2556"
                         buttonText="Save"
                         textColor="white"

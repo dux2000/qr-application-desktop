@@ -14,6 +14,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CustomNotification from "../../common/CustomNotification";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {useNavigate} from "react-router-dom";
+import CustomSimpleSearch from "../../common/CustomSimpleSearch";
 
 const CustomersScreen = () => {
     const [customerInfo, setCustomerInfo] = useState<CustomerDto>();
@@ -155,12 +156,12 @@ const CustomersScreen = () => {
                 flexDirection: "row",
                 justifyContent: 'space-between',
                 alignItems: "center",
-                marginBottom: "10px",
+                marginBottom: "60px",
                 marginRight: "40px"
             }}>
-                <Box sx={{margin: '24px 40px 0', position: 'relative', zIndex: '100'}}>
-                    <CustomSearch
-                        handleSearch={handleSearch} childrenChecked={[]} placeholder="Search customer"
+                <Box sx={{margin: '0 40px 0', position: 'relative', zIndex: '100'}}>
+                    <CustomSimpleSearch
+                        handleSearch={handleSearch} childrenChecked={[]} placeholder="Search user"
                     />
                 </Box>
                 <CustomButton
