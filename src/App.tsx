@@ -7,6 +7,7 @@ import CustomerDetailScreen from "./components/screens/customers/CustomerDetailS
 import ProductDetailScreen from "./components/screens/products/ProductDetailScreen";
 import TabScreen from "./components/screens/TabScreen";
 import ChangePasswordScreen from "./components/screens/change-password/ChangePasswordScreen";
+import UserDetailScreen from "./components/screens/users/UserDetailScreen";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -30,12 +31,12 @@ export default function App() {
                 {
                     path: "/products/:productId",
                     element: <ProductDetailScreen />
+                },
+                {
+                    path: "/users/:userId",
+                    element: <UserDetailScreen />
                 }
             ]
-        },
-        {
-            path: "/customers/:customerId",
-            element: <CustomerDetailScreen />
         },
         {
             path: "/change-password",

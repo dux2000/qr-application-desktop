@@ -2,6 +2,18 @@ import {api_endpoint} from "../boot/axios";
 import {SearchRequest, SearchResponse, UserDto, UserInterface} from "../interface/Interfaces";
 
 const user = {
+    async getUser(id: string) : Promise<UserDto> {
+      const url = `users/${id}`
+
+      return api_endpoint.get(url)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => {
+                throw error;
+            })
+    },
+
     async loginUser(username: string, password: string) : Promise<UserDto> {
         const url = "users/login"
 

@@ -18,7 +18,7 @@ const ProductDetailScreen = () => {
     return productRevision.map((product) => ({
         name: product.name,
         status: product.status.name,
-        worker: product.currentUser.fullName + ' - ' + product.currentUser.role,
+        worker: product.currentUser.fullName,
         updated: product.updated
     }));
   };
@@ -330,7 +330,7 @@ const ProductDetailScreen = () => {
                               fontFamily: 'Source Sans Pro, sans-serif',
                               color: 'black'
                           }}>
-                          {product?.currentUser.fullName + ' - ' + product?.currentUser.role}
+                          {product?.currentUser.fullName}
                       </Typography>
                   </Box>
                   <Box

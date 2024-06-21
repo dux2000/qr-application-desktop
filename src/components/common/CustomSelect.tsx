@@ -28,7 +28,7 @@ const CssCustomSelect = styled(Select, {
 const CustomSelect = ({ label, setData, data, defaultValue, errorMessage, setErrorMessage }: { label: string, setData: Function, data: any, defaultValue?: any, errorMessage?: string, setErrorMessage?: Function; }) => {
     const [inputValue, setInputValue] = useState<number | null>(defaultValue === undefined ? null : defaultValue);
     const [isFocused, setIsFocused] = useState<boolean>(false);
-    
+
     const handleFocus = () => {
         setIsFocused(true);
     };

@@ -1,14 +1,12 @@
 import {useEffect, useState} from "react";
-import {SearchFilter, SearchRequest, UserDto, UserInterface} from "../../../interface/Interfaces";
+import {SearchFilter, SearchRequest, UserDto} from "../../../interface/Interfaces";
 import api from "../../../service/api";
 import {Box, Typography} from "@mui/material";
 import CustomButton from "../../common/CustomButton";
 import AddIcon from '@mui/icons-material/Add';
 import FormInput from "../../common/FormInput";
-import CustomSearch from "../../common/CustomSearch";
 import CustomTable from "../../common/CustomTable";
 import CustomDialog from "../../common/CustomDialog";
-import CustomSwitch from "../../common/CustomSwitch";
 import CustomNotification from "../../common/CustomNotification";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -16,6 +14,7 @@ import {COLORS} from "../../../constants/theme";
 import CustomSelect from "../../common/CustomSelect";
 import useDebounce from "../../../state/hooks/useDebounce";
 import CustomSimpleSearch from "../../common/CustomSimpleSearch";
+import {useNavigate} from "react-router-dom";
 
 const UsersScreen = () => {
     const [users, setUsers] = useState<UserDto[]>([]);
@@ -32,7 +31,6 @@ const UsersScreen = () => {
         }
     })
     const [openDialogAddUser, setOpenDialogAddUser] = useState<boolean>(false);
-    const [openDialogEditUser, setOpenDialogEditUser] = useState<boolean>(false);
     const [openConfirmDeleteNotification, setOpenConfirmDeleteNotification] = useState<boolean>(false);
     const [openDeletedNotification, setOpenDeletedNotification] = useState<boolean>(false);
     const [openAddNotification, setOpenAddNotification] = useState<boolean>(false);
@@ -60,6 +58,7 @@ const UsersScreen = () => {
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const debounceValue = useDebounce(searchedString, 400);
+    const navigate = useNavigate();
 
     function handleSearch() {
 
@@ -119,16 +118,7 @@ const UsersScreen = () => {
     };
 
     const editRow = (userId: number) => {
-        const user = users.find((user) => user.id === userId)
-
-        if (user) {
-            setUserId(user.id)
-            setUsername(user.username)
-            setFullName(user.fullName)
-            setForcePasswordChange(user.update)
-        }
-
-        setOpenDialogEditUser(true)
+        navigate("/users/" + userId)
     }
 
     const handlePageChange = (
@@ -155,37 +145,9 @@ const UsersScreen = () => {
             id: user.id,
             username: user.username,
             fullName: user.fullName,
-            role: user.role,
+            role: user.types.map((x) => x.name).join(", "),
             actions: [<ModeEditIcon/>, <DeleteOutlineIcon/>],
         }));
-    };
-
-    const handleUpdateUser = () => {
-        if (username === "" || fullName === "") {
-            if (username === "")
-                setErrorUsername("Field must not be empty.")
-            if (fullName === "")
-                setErrorFullName("Field must not be empty.")
-
-            return
-        }
-
-        const user: UserInterface = {
-            id: userId,
-            username: username,
-            fullName: fullName,
-            update: forcePasswordChange,
-            password: password
-        }
-
-        api.user.updateUser(user)
-            .then((response) => {
-                fetchUsers()
-                setOpenDialogEditUser(false);
-            })
-            .catch(error => {
-                console.log(error)
-            })
     };
 
     const fetchUsers = () => {
@@ -201,7 +163,7 @@ const UsersScreen = () => {
 
     //set username, fullname, password and also errors to empty when dialogs closes
     useEffect(() => {
-        if (!openDialogAddUser && !openDialogEditUser) {
+        if (!openDialogAddUser) {
             setUsername('')
             setFullName('')
             setPassword('')
@@ -210,7 +172,7 @@ const UsersScreen = () => {
             setErrorPassword("")
             setShowPassword(false)
         }
-    }, [openDialogAddUser, openDialogEditUser])
+    }, [openDialogAddUser])
 
     useEffect(() => {
         handleSearch()
@@ -290,48 +252,6 @@ const UsersScreen = () => {
                         textColor={COLORS.white}
                         width={130}
                         handleClick={handleAddNewUser}/>
-                }
-            />
-
-            <CustomDialog
-                title="Edit user"
-                open={openDialogEditUser}
-                handleOpen={setOpenDialogEditUser}
-                childrenForms={[
-                    <FormInput
-                        label="Username"
-                        type="text"
-                        data={username}
-                        errorMessage={errorUsername}
-                        setErrorMessage={setErrorUsername}
-                        setData={setUsername}/>,
-                    <FormInput
-                        label="Full name"
-                        type="text"
-                        data={fullName}
-                        errorMessage={errorFullName}
-                        setErrorMessage={setErrorFullName}
-                        setData={setFullName}/>,
-                    <FormInput
-                        label="New password"
-                        type="password"
-                        setData={setPassword}
-                        showPassword={showPassword}
-                        handleClickShowPassword={handleClickShowPassword}/>
-                ]}
-                childrenSwitch={[
-                    <CustomSwitch
-                        label="Force password change"
-                        checked={forcePasswordChange}
-                        handleChange={setForcePasswordChange}/>,
-                ]}
-                childrenButton={
-                    <CustomButton
-                        buttonColor={COLORS.primary}
-                        onHoverButtonColor="#0B2556"
-                        buttonText="Save"
-                        textColor="white"
-                        handleClick={handleUpdateUser}/>
                 }
             />
 

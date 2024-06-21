@@ -66,14 +66,18 @@ export interface UserDto {
     id: number;
     username: string;
     fullName: string;
-    role: string,
+    types: UserTypeDto[],
     update: boolean
 }
 
+export interface UserTypeDto {
+    code: string,
+    name: string
+
+}
 export interface UserReferenceDto {
     id: string,
     fullName: string,
-    role: string
 }
 export interface UserInterface {
     id : number,
@@ -82,7 +86,7 @@ export interface UserInterface {
     error?: string,
     isLoggedIn?: boolean,
     update: boolean,
-    role?: string,
+    types?: UserTypeDto[],
     password?: string
 }
 
