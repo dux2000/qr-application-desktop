@@ -1,25 +1,26 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ProductTypeDto} from "../../interface/Interfaces";
+import {CommonDataDto} from "../../interface/Interfaces";
 
-const initialState = {
-    productType : []
+const initialState: CommonDataDto = {
+    productTypes : [],
+    userTypes: []
 };
 
 const commonSlice = createSlice({
     name: "common",
     initialState,
     reducers: {
-        saveProductTypes: (state: any, action: PayloadAction<ProductTypeDto[]>) => {
-            const types = action.payload;
-            types.forEach(type => {
-                state.productType.push(type)
-            })
+        saveCommonData: (state: any, action: PayloadAction<CommonDataDto>) => {
+            const data = action.payload;
+            console.log(data);
+            state.productTypes = data.productTypes;
+            state.userTypes = data.userTypes;
         },
     },
 });
 
 export const {
-    saveProductTypes
+    saveCommonData
 } = commonSlice.actions;
 
 export default commonSlice.reducer;

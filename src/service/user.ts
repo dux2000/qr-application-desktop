@@ -1,5 +1,5 @@
 import {api_endpoint} from "../boot/axios";
-import {SearchRequest, SearchResponse, UserDto, UserInterface} from "../interface/Interfaces";
+import {SearchRequest, SearchResponse, UserDto, UserInterface, UserTypeCommand} from "../interface/Interfaces";
 
 const user = {
     async getUser(id: string) : Promise<UserDto> {
@@ -39,20 +39,20 @@ const user = {
             .catch((error) => {throw error;})
     },
 
-    async createUser(username: string, fullName: string, password: string, role: string): Promise<UserDto> {
+    async createUser(username: string, fullName: string, password: string, types: UserTypeCommand[]): Promise<UserDto> {
         const url = "users"
         type RequestBody = {
             fullName: string,
             username: string,
             password: string,
-            role: string
+            types: UserTypeCommand[]
         }
 
         const requestBody: RequestBody = {
             fullName: fullName,
             username: username,
             password: password,
-            role: role
+            types: types
         }
         return api_endpoint.post(url, requestBody)
             .then((response) => {
@@ -70,6 +70,7 @@ const user = {
             username: string,
             password?: string,
             update: boolean,
+            types?: UserTypeCommand[]
         }
 
         const requestBody: RequestBody = {
@@ -77,6 +78,7 @@ const user = {
             username: user.username,
             password: user.password,
             update: user.update,
+            types: user.types
         }
 
         return api_endpoint.put(url, requestBody)

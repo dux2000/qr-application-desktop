@@ -112,3 +112,12 @@ export interface SearchResponse<T> {
     data: T[],
     total: number
 }
+
+export interface CommonDataDto {
+    productTypes: ProductTypeDto[],
+    userTypes: UserTypeDto[]
+}
+
+export interface UserTypeCommand {
+    code: string
+}

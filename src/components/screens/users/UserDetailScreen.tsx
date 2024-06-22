@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {Box, IconButton, Typography} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {UserDto, UserInterface, UserTypeDto} from "../../../interface/Interfaces";
+import {UserDto, UserInterface} from "../../../interface/Interfaces";
 import {useEffect, useState} from "react";
 import api from "../../../service/api";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -11,9 +11,12 @@ import CustomButton from "../../common/CustomButton";
 import {COLORS} from "../../../constants/theme";
 import CustomDialog from "../../common/CustomDialog";
 import CustomSelect from "../../common/CustomSelect";
+import {useSelector} from "react-redux";
+import useMoreCustomSelects from "../../../state/hooks/useMoreCustomSelects";
 const UserDetailScreen = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
+    const userTypes = useSelector((state: any) => state.common.userTypes);
     const [user, setUser] = useState<UserDto>();
     const [openDialogEditUser, setOpenDialogEditUser] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
@@ -24,12 +27,13 @@ const UserDetailScreen = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [errorUsername, setErrorUsername] = useState<string>("")
     const [errorFullName, setErrorFullName] = useState<string>("")
-    const [userTypes, setUserTypes] = useState<UserTypeDto[]>([{"code": "ADMIN", "name": "Administrator"}, {"code": "DOSTAVA", "name": "Dostava"}])
+    const { codes, setCodes, addNewCode } = useMoreCustomSelects();
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleEditUser = () => {
         setUsername(user!.username)
         setFullName(user!.fullName)
         setForcePasswordChange(user!.update)
+        user?.types.forEach(type => addNewCode(type.code));
         setOpenDialogEditUser(true)
     }
 
@@ -48,7 +52,8 @@ const UserDetailScreen = () => {
             username: username,
             fullName: fullName,
             update: forcePasswordChange,
-            password: password
+            password: password,
+            types: codes.map(code => ({ code: code.code, name: "" }))
         }
 
         api.user.updateUser(user)
@@ -81,6 +86,7 @@ const UserDetailScreen = () => {
             setErrorUsername("")
             setErrorFullName("")
             setShowPassword(false)
+            setCodes([])
         }
     }, [openDialogEditUser])
 
@@ -262,16 +268,15 @@ const UserDetailScreen = () => {
                         setData={setPassword}
                         showPassword={showPassword}
                         handleClickShowPassword={handleClickShowPassword}/>,
-                    ...(user?.types?.map(type => (
+                    ...codes.map((code, index) => (
                         <CustomSelect
+                            key={index}
                             label="User role"
-                            setData={(value:any) => {
-                                console.log(value)
-                            }}
-                            data={userTypes} // Assume you have a predefined list of user role options
-                            defaultValue={type.code}
+                            setData={code.setCode}
+                            data={userTypes}
+                            defaultValue={code.code}
                         />
-                    )) || [])
+                    ))
                 ]}
                 childrenSwitch={[
                     <CustomSwitch

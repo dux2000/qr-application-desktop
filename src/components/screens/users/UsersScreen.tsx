@@ -15,6 +15,8 @@ import CustomSelect from "../../common/CustomSelect";
 import useDebounce from "../../../state/hooks/useDebounce";
 import CustomSimpleSearch from "../../common/CustomSimpleSearch";
 import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import useMoreCustomSelects from "../../../state/hooks/useMoreCustomSelects";
 
 const UsersScreen = () => {
     const [users, setUsers] = useState<UserDto[]>([]);
@@ -29,14 +31,14 @@ const UsersScreen = () => {
                 }],
             logicalOperator: "AND"
         }
-    })
+    });
     const [openDialogAddUser, setOpenDialogAddUser] = useState<boolean>(false);
     const [openConfirmDeleteNotification, setOpenConfirmDeleteNotification] = useState<boolean>(false);
     const [openDeletedNotification, setOpenDeletedNotification] = useState<boolean>(false);
     const [openAddNotification, setOpenAddNotification] = useState<boolean>(false);
     const [userInfo, setUserInfo] = useState<UserDto | null>(null);
 
-    const [userId, setUserId] = useState<number>(0)
+    const [userId, setUserId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
     const [fullName, setFullName] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -44,16 +46,14 @@ const UsersScreen = () => {
     const [searchActive, setSearchActive] = useState<boolean>(false);
     const [searchInactive, setSearchInactive] = useState<boolean>(false);
     const [forcePasswordChange, setForcePasswordChange] = useState<boolean>(false);
-    const [searchedString, setSearchedString] = useState<string>("")
-    const [role, setRole] = useState<any>([{id: 8, name: "NARUDŽBE"}, {
-        id: 9,
-        name: "RADNIK"
-    }])
-    const [roleId, setRoleId] = useState<number>()
+    const [searchedString, setSearchedString] = useState<string>("");
 
-    const [errorUsername, setErrorUsername] = useState<string>("")
-    const [errorPassword, setErrorPassword] = useState<string>("")
-    const [errorFullName, setErrorFullName] = useState<string>("")
+    const userTypes = useSelector((state: any) => state.common.userTypes);
+    const { codes, setCodes, addNewCode } = useMoreCustomSelects();
+
+    const [errorUsername, setErrorUsername] = useState<string>("");
+    const [errorPassword, setErrorPassword] = useState<string>("");
+    const [errorFullName, setErrorFullName] = useState<string>("");
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -61,7 +61,6 @@ const UsersScreen = () => {
     const navigate = useNavigate();
 
     function handleSearch() {
-
         const filter: SearchFilter = {
             searchCriteria: [
                 {
@@ -86,40 +85,44 @@ const UsersScreen = () => {
                     logicalOperator: "OR"
                 }
             ]
-        }
+        };
 
         setApiCarrier((prevApiCarrier) => ({
             ...prevApiCarrier,
             searchFilter: filter
-        }))
+        }));
     }
 
     const handleAddNewUser = () => {
         if (username === "" || password === "" || fullName === "") {
             if (username === "")
-                setErrorUsername("Field must not be empty.")
+                setErrorUsername("Field must not be empty.");
             if (password === "")
-                setErrorPassword("Field must not be empty.")
+                setErrorPassword("Field must not be empty.");
             if (fullName === "")
-                setErrorFullName("Field must not be empty.")
+                setErrorFullName("Field must not be empty.");
 
-            return
+            return;
         }
 
-        api.user.createUser(username, fullName, password, role.filter((x: any) => x.id === roleId)[0].name)
+        const userTypeCommands = codes.map((x) => ({
+            code: x.code
+        }));
+
+        api.user.createUser(username, fullName, password, userTypeCommands)
             .then((response) => {
                 setOpenDialogAddUser(false);
-                setOpenAddNotification(true)
-                setUserInfo(response)
+                setOpenAddNotification(true);
+                setUserInfo(response);
             })
             .catch(error => {
-                setErrorUsername(error.response.data.message)
-            })
+                setErrorUsername(error.response.data.message);
+            });
     };
 
     const editRow = (userId: number) => {
-        navigate("/users/" + userId)
-    }
+        navigate("/users/" + userId);
+    };
 
     const handlePageChange = (
         _event: React.ChangeEvent<unknown>,
@@ -132,12 +135,12 @@ const UsersScreen = () => {
     };
 
     const handleDeleteUserClick = (id: number) => {
-        setUserId(id)
-        setOpenConfirmDeleteNotification(true)
-    }
+        setUserId(id);
+        setOpenConfirmDeleteNotification(true);
+    };
 
     const handleDeleteUser = () => {
-
+        // Implement delete user functionality
     };
 
     const createUsersForTable = () => {
@@ -161,21 +164,22 @@ const UsersScreen = () => {
         fetchUsers();
     }, [apiCarrier]);
 
-    //set username, fullname, password and also errors to empty when dialogs closes
+    // Reset form fields when dialog closes
     useEffect(() => {
         if (!openDialogAddUser) {
-            setUsername('')
-            setFullName('')
-            setPassword('')
-            setErrorUsername("")
-            setErrorFullName("")
-            setErrorPassword("")
-            setShowPassword(false)
+            setUsername('');
+            setFullName('');
+            setPassword('');
+            setErrorUsername("");
+            setErrorFullName("");
+            setErrorPassword("");
+            setCodes([]);
+            setShowPassword(false);
         }
-    }, [openDialogAddUser])
+    }, [openDialogAddUser]);
 
     useEffect(() => {
-        handleSearch()
+        handleSearch();
     }, [debounceValue]);
 
     return (
@@ -199,7 +203,7 @@ const UsersScreen = () => {
                     buttonText="New user"
                     textColor="white"
                     Icon={<AddIcon/>}
-                    handleClick={() => setOpenDialogAddUser(true)}
+                    handleClick={() => {setOpenDialogAddUser(true); addNewCode("");}}
                     width={160}
                 />
             </Box>
@@ -212,7 +216,7 @@ const UsersScreen = () => {
                     totalSize={totalUsers}
                     handlePageChange={handlePageChange}
                     messageForEmptyDataBold={"No Users match your search"}
-                    messageForEmptyDataRegular={"Try to serach by another criteria"}
+                    messageForEmptyDataRegular={"Try to search by another criteria"}
                 />
             </Box>
 
@@ -241,9 +245,15 @@ const UsersScreen = () => {
                         setData={setPassword}
                         showPassword={showPassword}
                         handleClickShowPassword={handleClickShowPassword}/>,
-                    <CustomSelect label={"User role"} setData={setRoleId} data={role}/>
+                    ...codes.map((code, index) => (
+                        <CustomSelect
+                            label="User role"
+                            setData={code.setCode}
+                            data={userTypes}
+                            key={index}
+                        />
+                    )),
                 ]}
-
                 childrenButton={
                     <CustomButton
                         buttonColor={COLORS.primary}
@@ -294,8 +304,8 @@ const UsersScreen = () => {
                     }}>
                         User&nbsp;
                         <span style={{fontWeight: 600}}>
-              {userInfo?.username} ({userInfo?.fullName})
-            </span>
+                            {userInfo?.username} ({userInfo?.fullName})
+                        </span>
                         &nbsp;has been deleted.
                     </Typography>
                 )}
@@ -324,8 +334,8 @@ const UsersScreen = () => {
                     }}>
                         User&nbsp;
                         <span style={{fontWeight: 600}}>
-                {userInfo?.username} ({userInfo?.fullName})
-              </span>
+                            {userInfo?.username} ({userInfo?.fullName})
+                        </span>
                         &nbsp;has been created.
                     </Typography>
                 )}
@@ -340,9 +350,7 @@ const UsersScreen = () => {
                 ]}
                 buttonAlignment="end"/>
         </>
-
-
     );
-}
+};
 
 export default UsersScreen;

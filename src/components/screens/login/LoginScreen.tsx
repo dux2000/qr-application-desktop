@@ -1,8 +1,7 @@
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import FormInputText from "../../common/FormInput";
 import {useEffect, useState} from "react";
 import CustomButton from "../../common/CustomButton";
-import {COLORS} from "../../../constants/theme";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 

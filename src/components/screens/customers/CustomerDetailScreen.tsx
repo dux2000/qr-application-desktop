@@ -1,5 +1,5 @@
 import {Box, IconButton, Typography} from "@mui/material";
-import {CustomerDto, ProductCommand, ProductDto, SearchRequest} from "../../../interface/Interfaces";
+import {CommonDataDto, CustomerDto, ProductCommand, ProductDto, SearchRequest} from "../../../interface/Interfaces";
 import {useEffect, useState} from "react";
 import api from "../../../service/api";
 import {useNavigate, useParams} from "react-router-dom";
@@ -26,7 +26,7 @@ const characteristics = {
 const CustomerDetailScreen = () => {
     const {customerId} = useParams();
     const user = useSelector((state: any) => state.user);
-    const productTypes = useSelector((state: any) => state.common.productType);
+    const productTypes = useSelector((state: any) => state.common.productTypes);
     const [customer, setCustomer] = useState<CustomerDto | null>(null);
     const [products, setProducts] = useState<ProductDto[]>([]);
     const [productId, setProductId] = useState<number>();

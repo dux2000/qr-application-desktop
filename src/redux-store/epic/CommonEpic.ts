@@ -1,21 +1,21 @@
 import { ofType } from "redux-observable"
 import { from, map, mergeMap, of } from "rxjs"
 import api from "../../service/api"
-import { saveProductTypes } from "../reducer/commonSlice"
+import { saveCommonData } from "../reducer/commonSlice"
 
-const GET_PRODUCT_TYPES = 'GET_PRODUCT_TYPES';
+const GET_COMMON_DATA = 'GET_COMMON_DATA';
 
 export const CommonEpic = (action$: any, state$: any) => {
     return action$.pipe(
-        ofType(GET_PRODUCT_TYPES),
+        ofType(GET_COMMON_DATA),
         mergeMap((action: any) => {
-                if(action.type === GET_PRODUCT_TYPES) {
+                if(action.type === GET_COMMON_DATA) {
                     return from(
-                        api.products.getTypes()
+                        api.common.getCommonData()
                     ).pipe(
                         map((response: any) => {
                             if (response) {
-                                return saveProductTypes(response);
+                                return saveCommonData(response);
                             }
                         })
                     )
