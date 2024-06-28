@@ -1,11 +1,12 @@
 import {api_endpoint} from "../boot/axios";
 import {CustomerDto, SearchRequest, SearchResponse} from "../interface/Interfaces";
+import tokenManager from "./token";
 
 const customer = {
     async getCustomers(request: SearchRequest) : Promise<SearchResponse<CustomerDto>> {
         const url = 'customers/filter'
 
-        return api_endpoint.post(url, request)
+        return api_endpoint.post(url, request, tokenManager.getAuthHeaders())
             .then((response) => {
                 return response.data
             })
@@ -18,7 +19,7 @@ const customer = {
         const url = `customers/${id}`
 
         try {
-            const response = await api_endpoint.get(url);
+            const response = await api_endpoint.get(url, tokenManager.getAuthHeaders());
             return response.data;
         } catch (error) {
             throw error;
@@ -42,7 +43,7 @@ const customer = {
             ]
         }
 
-        return api_endpoint.post(url, newCustomer)
+        return api_endpoint.post(url, newCustomer, tokenManager.getAuthHeaders())
             .then((response) => {
                 return response.data
             })
@@ -54,7 +55,7 @@ const customer = {
     async deleteCustomer(id: number): Promise<CustomerDto> {
       const url = `customers/${id}`
 
-      return api_endpoint.delete(url)
+      return api_endpoint.delete(url, tokenManager.getAuthHeaders())
           .then((response) => {
               return response.data
           })
@@ -70,7 +71,7 @@ const customer = {
             fullName: fullName,
         }
 
-        return api_endpoint.put(url, updatedCustomer)
+        return api_endpoint.put(url, updatedCustomer, tokenManager.getAuthHeaders())
             .then((response) => {
                 return response.data
             })

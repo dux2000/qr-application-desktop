@@ -12,7 +12,6 @@ const commonSlice = createSlice({
     reducers: {
         saveCommonData: (state: any, action: PayloadAction<CommonDataDto>) => {
             const data = action.payload;
-            console.log(data);
             state.productTypes = data.productTypes;
             state.userTypes = data.userTypes;
         },

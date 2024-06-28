@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {UserDto, UserInterface} from "../../interface/Interfaces";
+import tokenManager from "../../service/token";
 
 const initialState: UserInterface = {
     id: 0,
@@ -29,6 +30,7 @@ const userSlice = createSlice({
         },
         signOutAction: (state: any) => {
             localStorage.removeItem("plmLoginInfo");
+            tokenManager.removeToken()
             return initialState;
         },
         registerSuccessAction: (

@@ -13,6 +13,10 @@ import CustomDialog from "../../common/CustomDialog";
 import CustomSelect from "../../common/CustomSelect";
 import {useSelector} from "react-redux";
 import useMoreCustomSelects from "../../../state/hooks/useMoreCustomSelects";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import dayjs, { Dayjs } from "dayjs";
 const UserDetailScreen = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
@@ -27,6 +31,7 @@ const UserDetailScreen = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [errorUsername, setErrorUsername] = useState<string>("")
     const [errorFullName, setErrorFullName] = useState<string>("")
+    const [date, setDate] = useState<Dayjs | null>(dayjs());
     const { codes, setCodes, addNewCode } = useMoreCustomSelects();
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleEditUser = () => {
@@ -243,6 +248,41 @@ const UserDetailScreen = () => {
             </Box>
 
             {/* divider */}
+            <Box
+                sx={{
+                    margin: '40px 40px 0',
+                    height: '1px',
+                    backgroundColor: '#E6E6E6'
+                }}
+            />
+
+            <Box sx={{
+                margin: '40px 40px',
+                display: 'flex',
+                justifyContent: 'space-between',
+            }}>
+                {/* CALENDAR */}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateCalendar sx={{margin:0}} value={date} onChange={(newDate) => {console.log(newDate)}} />
+                </LocalizationProvider>
+
+                <Box sx={{flex: 2}}>
+                    <Typography sx={{
+                        fontSize: '24px',
+                        fontStyle: 'normal',
+                        fontWeight: 700,
+                        lineHeight: 'normal',
+                        fontFamily: 'Source Sans Pro, sans-serif',
+                        color: '#0B2556',
+                        textAlign: 'center'
+                    }}>
+                        User statistics for that day
+                    </Typography>
+
+
+                </Box>
+            </Box>
+
             <CustomDialog
                 title="Edit user"
                 open={openDialogEditUser}

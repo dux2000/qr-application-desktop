@@ -29,8 +29,7 @@ const StyledTab = styled((props: StyledTabProps) => (
 const TabScreen = () => {
     const tabOverview = useSelector((state: any) => state.tabOverview);
     const dispatch = useDispatch();
-    const [value, setValue] = useState<string>('1');
-    console.log(tabOverview.value)
+
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         dispatch({
             type: "CHANGE_VALUE",

@@ -16,7 +16,6 @@ const LoginScreen = () => {
     const dispatch = useDispatch();
 
     const handleSubmit = () => {
-
         dispatch({
             type: "LOGIN_USER",
             payload: { username: username, password: password },
@@ -70,6 +69,7 @@ const LoginScreen = () => {
                     width={300}
                     handleClick={handleSubmit}
                 />
+                {user.error && <Box sx={{color: "red"}}>{user.error}</Box>}
             </Box>
         </>
     )
